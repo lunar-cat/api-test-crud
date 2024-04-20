@@ -3,13 +3,14 @@ package main
 import (
 	"api-test-crud/config"
 	"api-test-crud/internal/routes"
-	"flag"
 	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"log"
 	"net/http"
+	"os"
+	"strconv"
 )
 
 func main() {
@@ -17,9 +18,8 @@ func main() {
 	config.InitEnv()
 	config.InitJwt()
 
-	// Flags
-	port := flag.Int("port", 8080, "Número de puerto para el servidor")
-	flag.Parse()
+	// Port
+	port := getPort()
 
 	// Router
 	r := chi.NewRouter()
@@ -35,8 +35,15 @@ func main() {
 	r.Mount("/api/v1/items", routes.CrudRouter())
 	r.Mount("/api/v1/login", routes.LoginRouter())
 
-	// Init server
-	initServer(r, *port)
+	initServer(r, port)
+}
+
+func getPort() int {
+	port, err := strconv.Atoi(os.Getenv("PORT"))
+	if err != nil {
+		port = 8081
+	}
+	return port
 }
 
 func Cors() func(next http.Handler) http.Handler {
@@ -44,7 +51,7 @@ func Cors() func(next http.Handler) http.Handler {
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"*"},
 		AllowCredentials: false,
-		MaxAge:           300, // Max value
+		MaxAge:           300,
 	})
 }
 
