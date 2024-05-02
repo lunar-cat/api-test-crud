@@ -67,8 +67,8 @@ func (h *ClientsHandler) DeleteClient(w http.ResponseWriter, r *http.Request) {
 		utils.NotFoundResponse(w, r, "Error: Registro con ID "+clientID+" no existe")
 		return
 	}
-
-	utils.OkResponse(w, r, "Cliente eliminado", client)
+	deletedSeats := models.DeleteSeatsFromClient(clientID)
+	utils.OkResponse(w, r, "Cliente eliminado", map[string]interface{}{"client": client, "seats": deletedSeats})
 }
 
 // Helpers

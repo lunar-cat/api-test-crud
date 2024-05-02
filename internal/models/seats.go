@@ -74,3 +74,19 @@ func DeleteSeat(id string) (*Seat, bool) {
 	}
 	return nil, false
 }
+
+func DeleteSeatsFromClient(clientID string) []*Seat {
+	var deletedSeats []*Seat
+	var remainingSeats []*Seat
+
+	for _, seat := range seats {
+		if seat.ClientID == clientID {
+			deletedSeats = append(deletedSeats, seat)
+		} else {
+			remainingSeats = append(remainingSeats, seat)
+		}
+	}
+
+	seats = remainingSeats
+	return deletedSeats
+}
