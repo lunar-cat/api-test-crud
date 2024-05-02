@@ -32,8 +32,9 @@ func main() {
 	r.Use(middleware.Heartbeat("/ping"))
 
 	// Routes
-	r.Mount("/api/v1/items", routes.CrudRouter())
 	r.Mount("/api/v1/login", routes.LoginRouter())
+	r.Mount("/api/v1/clients", routes.ClientsRouter())
+	r.Mount("/api/v1/seats", routes.SeatsRouter())
 
 	initServer(r, port)
 }
